@@ -33,13 +33,6 @@ jobs:
           echo "$(git rev-parse --short HEAD^1)"
 
 
-
-
-
-
-ref: ${{ github.event.pull_request.head.sha }}
-
-
 #      - name: checkout
 #        uses: actions/checkout@v2
 #        with:
