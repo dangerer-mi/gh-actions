@@ -1,0 +1,27 @@
+name: test
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+jobs:
+  deploy-and-prepare-new-release:
+    if: ${{ github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # merge-commit, last commit from feature/hotfix branch
+      - name: Set POM_VERSION
+        run: echo "POM_VERSION=0.0.1" >> $GITHUB_ENV
+      - name: Set ARTIFACT_VERSION
+        run: |
+          SHORT_HASH=$(git rev-parse --short HEAD^1)
+          echo "ARTIFACT_VERSION=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
+      - name: Tag release
+        run: |
+          echo "Tagging branch with ${ARTIFACT_VERSION}."
+          git tag ${ARTIFACT_VERSION}
+          git push origin ${ARTIFACT_VERSION}
