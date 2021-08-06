@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     types: [ closed ]
 
+
 jobs:
   deploy-and-prepare-new-release:
     if: ${{ github.event.pull_request.merged == true }}
@@ -13,15 +14,29 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2 # merge-commit, last commit from feature/hotfix branch
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Set POM_VERSION
-        run: echo "POM_VERSION=0.0.1" >> $GITHUB_ENV
+        run: echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - name: Set ARTIFACT_VERSION
         run: |
-          SHORT_HASH=$(git rev-parse --short HEAD^1)
+          SHORT_HASH=$(git rev-parse --short HEAD)
           echo "ARTIFACT_VERSION=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
+      - name: checkout
+        uses: actions/checkout@v2
       - name: Tag release
         run: |
           echo "Tagging branch with ${ARTIFACT_VERSION}."
           git tag ${ARTIFACT_VERSION}
           git push origin ${ARTIFACT_VERSION}
+      - name: Prepare new release version
+        run: |
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          NEW_VERSION=$(echo ${CURRENT_VERSION} | awk -F. '{ minor=$2+1; print $1"."minor"."$3}')
+          echo  "Old version: \t ${CURRENT_VERSION}"
+          echo  "New version: \t ${NEW_VERSION}"
+          mvn versions:set -DnewVersion=${NEW_VERSION}
+          git config --global user.email "release-bot@movingiamge.com"
+          git config --global user.name "Release Bot"
+          git add .
+          git commit -m "set version for next release: ${NEW_VERSION}"
+          git push
