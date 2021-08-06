@@ -14,14 +14,44 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 2 # merge-commit, last commit from feature/hotfix branch
-      - name: Set POM_VERSION
-        run: echo "POM_VERSION=0.0.1" >> $GITHUB_ENV
-      - name: Set ARTIFACT_VERSION
+      - name: test
         run: |
-          SHORT_HASH=$(git rev-parse --short HEAD^1)
-          echo "ARTIFACT_VERSION=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
-      - name: Tag release
+          echo "head"
+          echo "$(git rev-parse --short HEAD)"
+          echo "head^1"
+          echo "$(git rev-parse --short HEAD^1)"
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+      - name: test2
         run: |
-          echo "Tagging branch with ${ARTIFACT_VERSION}."
-          git tag ${ARTIFACT_VERSION}
-          git push origin ${ARTIFACT_VERSION}
+          echo "head"
+          echo "$(git rev-parse --short HEAD)"
+          echo "head^1"
+          echo "$(git rev-parse --short HEAD^1)"
+
+
+
+
+
+
+ref: ${{ github.event.pull_request.head.sha }}
+
+
+#      - name: checkout
+#        uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 2 # merge-commit, last commit from feature/hotfix branch
+#      - name: Set POM_VERSION
+#        run: echo "POM_VERSION=0.0.1" >> $GITHUB_ENV
+#      - name: Set ARTIFACT_VERSION
+#        run: |
+#          SHORT_HASH=$(git rev-parse --short HEAD^1)
+#          echo "ARTIFACT_VERSION=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
+#      - name: Tag release
+#        run: |
+#          echo "Tagging branch with ${ARTIFACT_VERSION}."
+#          git tag ${ARTIFACT_VERSION}
+#          git push origin ${ARTIFACT_VERSION}
