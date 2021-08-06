@@ -14,25 +14,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2 # merge-commit, last commit from feature/hotfix branch
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: test
         run: |
           echo "head"
           echo "$(git rev-parse --short HEAD)"
-          echo "head^1"
-          echo "$(git rev-parse --short HEAD^1)"
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 2
-      - name: test2
-        run: |
-          echo "head"
-          echo "$(git rev-parse --short HEAD)"
-          echo "head^1"
-          echo "$(git rev-parse --short HEAD^1)"
-
 
 #      - name: checkout
 #        uses: actions/checkout@v2
