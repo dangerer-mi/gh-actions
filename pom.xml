@@ -5,6 +5,6 @@
     <groupId>com.test</groupId>
     <artifactId>test</artifactId>
     <packaging>pom</packaging>
-    <version>0.27.0</version>
+    <version>0.28.0</version>
 
 </project>
