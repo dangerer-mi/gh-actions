@@ -1,0 +1,19 @@
+name: workflow run
+on:
+  workflow_run:
+    workflows: [ "hello" ]
+    types:
+      - completed
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ahmadnassri/action-workflow-run-wait@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+      - name: Test
+        run: echo "${{ github.event.workflow_run.head_branch }}"
+
