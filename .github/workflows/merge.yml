@@ -19,8 +19,7 @@ jobs:
         run: echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - name: Set ARTIFACT_VERSION
         run: |
-          SHORT_HASH=$(git rev-parse --short HEAD)
-          echo "ARTIFACT_VERSION=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
+          echo "ARTIFACT_VERSION=${POM_VERSION}-${GITHUB_SHA::7}" >> ${GITHUB_ENV}
       - name: Set ARTIFACT_VERSION II
         run: |
           SHORT_HASH=$(git rev-parse --short HEAD)
