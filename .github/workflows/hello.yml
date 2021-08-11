@@ -1,9 +1,15 @@
 name: test
 
 on:
-  push:
-    branches:
-      - feature/*
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'environment'
+        required: true
+        default: 'QA'
+      version:
+        description: 'version'
+        required: true
 
 jobs:
   hello:
