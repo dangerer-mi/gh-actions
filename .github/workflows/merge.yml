@@ -21,6 +21,11 @@ jobs:
         run: |
           SHORT_HASH=$(git rev-parse --short HEAD)
           echo "ARTIFACT_VERSION=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
+      - name: Set ARTIFACT_VERSION II
+        run: |
+          SHORT_HASH=$(git rev-parse --short HEAD)
+          echo $SHORT_HASH
+          echo "ARTIFACT_VERSION2=${POM_VERSION}-${SHORT_HASH}" >> ${GITHUB_ENV}
       - name: checkout
         uses: actions/checkout@v2
       - name: Tag release
